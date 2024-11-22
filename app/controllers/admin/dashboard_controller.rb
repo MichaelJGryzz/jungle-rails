@@ -2,6 +2,8 @@ class Admin::DashboardController < ApplicationController
   before_action :authenticate
 
   def show
+    @productTotal = Product.count
+    @categoryTotal = Category.count
   end
 
   private
@@ -11,5 +13,5 @@ class Admin::DashboardController < ApplicationController
       username == ENV["ADMIN_USERNAME"] && password == ENV["ADMIN_PASSWORD"]
     end
   end
-  
+
 end
