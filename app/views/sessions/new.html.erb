@@ -1,0 +1,27 @@
+<section class="sessions-new">
+
+  <header class="page-header">
+    <h1>Login</h1>
+  </header>
+
+  <%= form_with(url: sessions_path, method: :post, local: true) do %>
+    <div class="form-group">
+      <%= label_tag :email, 'Email' %>
+      <%= email_field_tag :email, params[:email], required: true, class: 'form-control' %>
+    </div>
+  
+    <div class="form-group">
+      <%= label_tag :password, 'Password' %>
+      <%= password_field_tag :password, nil, required: true, class: 'form-control' %>
+    </div>
+  
+    <div class="actions">
+      <%= submit_tag 'Log In', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+  
+  <small>
+  <%= link_to 'Create Account', new_user_path %> if you don't have an account.
+  </small>
+
+</section>
