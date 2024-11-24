@@ -8,9 +8,15 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      session[:user_id] = @user.id
       redirect_to root_path, notice: "Welcome #{@user.first_name}! Your account has been created."
     else
-      render :new, alert: 'There was an error creating your account.'
+      if @user.errors.details[:email]&.any? { |e| e[:error] == :taken }
+        flash.now[:alert] = 'Email has already been taken! Please use a different email.'
+      else
+        flash.now[:alert] = 'There was an error creating your account.'
+      end
+      render :new
     end
   end
 
