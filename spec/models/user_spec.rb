@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+
+
   describe "validations" do
     # Validate user with matching password and password_confirmation fields
     it 'is not valid if password and password_confirmation do not match' do
@@ -100,4 +102,44 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include("Password is too short (minimum is 6 characters)")
     end
   end
+
+
+  describe '.authenticate_with_credentials' do
+    before do
+      # Set up valid user before each test case
+      @user = User.create!(
+        first_name: 'Test',
+        last_name: 'User',
+        email: 'test@test.com',
+        password: 'password123',
+        password_confirmation: 'password123'
+      )
+    end
+
+    # Valid credentials should return the user
+    it 'returns the user when given valid credentials' do
+      authenticated_user = User.authenticate_with_credentials('test@test.com', 'password123')
+      expect(authenticated_user).to eq(@user)
+    end    
+    
+    # Invalid password should return nil
+    it 'returns nil with invalid credentials' do
+      authenticated_user = User.authenticate_with_credentials('test@test.com', 'wrongpassword')
+      expect(authenticated_user).to be_nil
+    end
+
+    # Extra spaces around the email should not affect authentication
+    it 'authenticates even with extra spaces around the email' do
+      authenticated_user = User.authenticate_with_credentials(' test@test.com ', 'password123')
+      expect(authenticated_user).to eq(@user)
+    end
+
+    # Authentication should be case-insensitive
+    it 'authenticates with the correct email case insensitively' do
+      authenticated_user = User.authenticate_with_credentials('TEST@TEST.COM', 'password123')
+      expect(authenticated_user).to eq(@user)
+    end
+  end
+
+
 end

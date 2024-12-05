@@ -5,11 +5,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    # Finder user by email
-    user = User.find_by(email: params[:email])
-
-    # Authenticate user
-    if user&.authenticate(params[:password])
+    # Authenticate user by email and password
+    if user = User.authenticate_with_credentials(params[:email], params[:password])
       session[:user_id] = user.id
       redirect_to root_path, notice: "Logged in successfully. Welcome back #{user.first_name}!"
     else
